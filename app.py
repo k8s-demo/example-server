@@ -8,6 +8,7 @@ import flask
 app = flask.Flask(__name__)
 hostname = socket.gethostname()
 accessed_times_file = pathlib.Path("/mnt/viewcounter.txt")
+secret_file = pathlib.Path("/secrets/my-secret-file.txt")
 
 @app.route("/")
 def example():
@@ -21,6 +22,10 @@ def example():
 @app.route("/slow/")
 def slow():
 	return subprocess.check_output(["openssl", "dhparam", "-out", "/dev/null", "2048"], stderr=subprocess.STDOUT)
+
+@app.route("/secret/")
+def secret():
+	return secret_file.read_text()
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0")
