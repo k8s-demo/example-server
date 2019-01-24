@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import pathlib
 import socket
+import subprocess
 
 import flask
 
@@ -16,6 +17,10 @@ def example():
 	accessed_times += 1
 	accessed_times_file.write_text(str(accessed_times))
 	return "Hello<br/>I am running on pod %s.<br/>This page has been accessed %d times.\n" % (hostname, accessed_times)
+
+@app.route("/slow/")
+def slow():
+	return subprocess.check_output(["openssl", "dhparam", "-out", "/dev/null", "2048"], stderr=subprocess.STDOUT)
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0")
